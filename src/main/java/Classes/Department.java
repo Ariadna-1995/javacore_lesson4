@@ -35,4 +35,9 @@ public class Department {
                 ", manager='" + manager.getLastName() + " " + manager.getFirstName() + '\'' +
                 '}';
     }
+
+    public void getId(int id) {
+        this.id = id;
+
+    }
 }

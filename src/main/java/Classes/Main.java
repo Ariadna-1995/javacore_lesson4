@@ -3,10 +3,12 @@ package Classes;
 
 import Enums.Priority;
 import Enums.Skill;
+import Menu.MainMenu;
+import Repository.DepartmentRepository;
 import Repository.EmployeeRepository;
 import Repository.FreeTaskRepository;
-import Services.EmployeeService;
-import Services.ManagerService;
+import Services.*;
+
 
 import java.time.LocalDate;
 
@@ -14,7 +16,7 @@ public class Main {
     static Department department;
     static Employee engineer1;
     static Employee engineer2;
-    static Manager manager;
+    static Employee manager;
     static Task taskLow1;
     static Task taskLow2;
     static Task taskMiddle1;
@@ -25,57 +27,21 @@ public class Main {
     static Task taskHigh2;
 
     public static void main(String[] args) {
-        department = new Department("Департамент1");
-        createEmployees();
-        department.setManager(manager);
         try {
-            createTasks();
-            System.out.println("FreeTaskRepository: " + FreeTaskRepository.getRepository());
-            EmployeeService employeeService = new EmployeeService();
-
-            Assignment assigmentTaskLow1 = TaskPlanner.planTask(department, taskLow1);
-            employeeService.startAssignmentByEmployee(engineer1, assigmentTaskLow1);
-
-            Assignment assigmentTaskLow2 = TaskPlanner.planTask(department, taskLow2);
-            employeeService.startAssignmentByEmployee(engineer2, assigmentTaskLow2);
-
-//
-
-            ManagerService managerService = new ManagerService();
-            managerService.increaseSalaryByManagerAllEmployees(manager, 100);
-
-            managerService.startFreeTaskByManager(manager);
-
-            try {
-                managerService.startTaskByManager(manager, taskMiddle2, engineer1);
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-
-            try {
-                managerService.startTaskByManager(manager, taskMiddle2);
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-
-            employeeService.finishAssignmentByEmployee(engineer1, 2);
-
-            System.out.println("Task by engineer1: " + employeeService.getAssigmentsByEmployee(engineer1));
-            System.out.println("Task by engineer2: " + employeeService.getAssigmentsByEmployee(engineer2));
-            System.out.println("Task by manager: " + employeeService.getAssigmentsByEmployee(manager));
-
-            managerService.startFreeTaskByManager(manager);
-
-            System.out.println("Task by engineer1: " + employeeService.getAssigmentsByEmployee(engineer1));
-            System.out.println("Task by engineer2: " + employeeService.getAssigmentsByEmployee(engineer2));
-            System.out.println("Task by manager: " + employeeService.getAssigmentsByEmployee(manager));
-
-            System.out.println("FreeTaskRepository: " + FreeTaskRepository.getRepository());
-
+            readData();
+            MainMenu.viewMenu();
+            writeData();
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(e.getMessage());
         }
+    }
+
+
+
+    public static void createDepartment() {
+        department = new Department("Отдел1");
+        DepartmentRepository.addDepartment(department);
     }
 
     public static void createEmployees() {
@@ -93,7 +59,7 @@ public class Main {
                 , department
                 , Skill.ENGINEER);
         EmployeeRepository.addEmployee(engineer2);
-        manager = new Manager("Соболев"
+        manager = new Employee("Соболев"
                 , "Сергей"
                 , LocalDate.of(1989, 5, 10)
                 , 300
@@ -109,54 +75,58 @@ public class Main {
                 , LocalDate.of(2023, 10, 16)
                 , Skill.ENGINEER
                 , 10);
-        FreeTaskRepository.addTask(department, taskLow1);
+        FreeTaskRepository.addTask(taskLow1);
         taskLow2 = new Task("НизкаяЗадача2"
                 , 2
                 , LocalDate.of(2023, 10, 15)
                 , Skill.ENGINEER
                 , 20);
-        FreeTaskRepository.addTask(department, taskLow2);
+        FreeTaskRepository.addTask(taskLow2);
         taskMiddle1 = new Task("СредняяЗадача1"
                 , 2
                 , LocalDate.of(2023, 10, 17)
                 , Priority.MIDDLE
                 , Skill.ENGINEER
                 , 5);
-        FreeTaskRepository.addTask(department, taskMiddle1);
+        FreeTaskRepository.addTask(taskMiddle1);
         taskMiddle2 = new Task("СредняяЗадача2"
                 , 3
                 , LocalDate.of(2023, 10, 16)
                 , Priority.MIDDLE
                 , Skill.ENGINEER
                 , 10);
-        FreeTaskRepository.addTask(department, taskMiddle2);
+        FreeTaskRepository.addTask(taskMiddle2);
         taskMiddle3 = new Task("СредняяЗадача3"
                 , 3
                 , LocalDate.of(2023, 10, 16)
                 , Priority.MIDDLE
                 , Skill.ENGINEER
                 , 9);
-        FreeTaskRepository.addTask(department, taskMiddle3);
+        FreeTaskRepository.addTask(taskMiddle3);
         taskMiddle4 = new Task("СредняяЗадача4"
                 , 3
                 , LocalDate.of(2023, 10, 16)
                 , Priority.MIDDLE
                 , Skill.ENGINEER
                 , 5);
-        FreeTaskRepository.addTask(department, taskMiddle4);
+        FreeTaskRepository.addTask(taskMiddle4);
         taskHigh1 = new Task("ВысокаяЗадача1"
                 , 3
                 , LocalDate.of(2023, 10, 16)
                 , Priority.HIGH
                 , Skill.ENGINEER
                 , 6);
-        FreeTaskRepository.addTask(department, taskHigh1);
+        FreeTaskRepository.addTask(taskHigh1);
         taskHigh2 = new Task("ВысокаяЗадача2"
                 , 3
                 , LocalDate.of(2023, 10, 16)
                 , Priority.HIGH
                 , Skill.ENGINEER
                 , 10);
-        FreeTaskRepository.addTask(department, taskHigh2);
+        FreeTaskRepository.addTask(taskHigh2);
     }
+    FileService fileService = new FileService();
+    fileService.fileWriterEmployee(EmployeeRepository.getEmployees());
+    System.out.println(fileService.fileReaderEmployee());
+
 }

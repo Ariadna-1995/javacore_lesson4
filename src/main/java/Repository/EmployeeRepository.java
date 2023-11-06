@@ -6,21 +6,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 abstract public class EmployeeRepository {
+    private static List<Employee> employeeRepository;
 
-    static private List<Employee> employeeRepository;
-
-    static public List<Employee> addEmployee(Employee employee){
+    public static List<Employee> addEmployee(Employee employee) {
         createEmployeeRepository();
         employeeRepository.add(employee);
         return employeeRepository;
     }
 
-    static public List<Employee> getRepository() {
+    public static List<Employee> getEmployeeRepository() {
         createEmployeeRepository();
         return employeeRepository;
     }
 
-    static private void createEmployeeRepository() {
+    public static void setEmployeeRepository(List<Employee> employeeList) {
+        createEmployeeRepository();
+        if (employeeList != null) employeeRepository.addAll(employeeList);
+    }
+
+    private static void createEmployeeRepository() {
         if (employeeRepository == null) employeeRepository = new ArrayList<>();
     }
 }
